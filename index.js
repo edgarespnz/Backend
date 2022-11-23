@@ -1,6 +1,7 @@
 const express = require("express");
 const bodyParser = require("body-parser");
 const cors = require("cors")
+var crypto = require("crypto")
 
 const {Productos, Usuarios} = require("./dao")
 
@@ -21,23 +22,39 @@ app.get("/productos", async(req,resp)=>{
 })
 
 
-app.get("/usuarios", async(req,resp)=>{
-    const nombre = req.query.nombre;
-    const apellido = req.query.apellido;
+//verificar que usuario existe por correo electronico
 
-    if(nombre == undefined || apellido ==undefined){
-        const listadoUsuario = await Usuarios.findAll()
-        resp.send(listadoUsuario)
-    }
-    else{
-        const listadoUsuario = await Usuarios.findAll({
-            where : {
-                nombre: nombre,
-                apellido: apellido
-            }
-            
-        })
-        resp.send(listadoUsuario)
+app.get("/usuarios", async(req,resp)=>{
+    const listaUsuarios = await Usuarios.findAll()
+    resp.send(listaUsuarios)
+})
+
+//crear nuevo usuario
+
+app.post("/create_user", async(req,resp)=>{
+    const option = req.query.opcion;
+    const nombre = req.query.nombre;
+    const correo = req.query.correo;
+    const contrasena = req.query.contrasena;
+    
+    const createuserid = crypto.randomUUID()
+    try {
+        if(option == "crear"){
+            await Usuario.create({
+                Usuario_ID : `${createuserid}`,
+                Nombre: nombre,
+                Apellido: apellido,
+                Correo: correo,
+                Contraseña : contrasena,
+                Direccion: "",
+                Departamento: "",
+                Ciudad: "",
+                Codigo_Postal : "",
+                Telefono: ""
+            })
+        }
+    } catch (error) {
+        
     }
 })
 
