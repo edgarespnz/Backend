@@ -17,6 +17,7 @@ const { stringify } = require("querystring");
 
 const app = express();
 const PORT = 8888;
+const TOKEN = "123456789"
 
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({
@@ -126,21 +127,48 @@ app.get("/usuarios_all", async (req, resp) => {
 })
 
 //obtener usuario por correo
-app.get("/usuarios", async (req, resp) => {
-    try {
-        const correo = req.query.correo
-        const listaUsuarios = await Usuarios.findAll({
-            where: {
-                Correo: correo
-            }
-        })
-        resp.send(listaUsuarios)
+app.post("/get_user", async (req, resp) => {
+    const email = req.body.email
+    const password = req.body.password
 
-    } catch (error) {
-        resp.send("error al obtener usuario")
+    const user = await Usuarios.findOne({
+        where : {
+            Correo : email,
+            Contraseña : password
+        }
+    })
+
+    if(user == null){
+        resp.send({
+            error : "El usuario no existe"
+        })
+    }
+    else{
+        resp.send({error : "", TOKEN : TOKEN})
     }
 })
 
+//obtener producto buscado en searchBar
+
+app.post("/obtener_producto", async (req,resp)=>{
+        const idProductoBuscado = req.body.idProductoBuscado
+
+        const producto = await Productos.findOne({
+            where : {
+                Producto_ID : idProductoBuscado
+            }
+        })
+
+        if(producto == null){
+            resp.send({error : "el producto no existe"})
+        }
+        else{
+            resp.send({
+                error : "",
+                producto : producto
+            })
+        }
+})
 /*FIN DE ENDPOINTS PARA OBTENER DATOS TOTALES*/
 
 
