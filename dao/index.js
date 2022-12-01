@@ -1,7 +1,9 @@
 const { Sequelize, DataTypes, UUIDV4 } = require("sequelize");
 
 const CADENA_CONEXION = process.env.DATABASE_URL ||
-    "postgresql://postgres:postgres@localhost:5432/product_backlog"
+    "postgresql://postgres::********@containers-us-west-111.railway.app:7719/railway"
+
+    //"postgresql://postgres:postgres@localhost:5432/product_backlog"
 
 const sequelize = new Sequelize(CADENA_CONEXION, {
     dialectOptions :{
