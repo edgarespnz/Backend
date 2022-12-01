@@ -78,6 +78,92 @@ app.get("/pc_armados", async (req, resp) => {
     resp.send(listaPcArmados)
 })
 
+//obtener productos de la pc armada
+app.get("/obtener_productos_pc_armado", async (req, resp) => {
+        const tipoArmado = req.query.tipo
+
+        if (tipoArmado == "coding" || tipoArmado == undefined) {
+            const listadoArmado = await PC_Armado_Producto.findAll({
+                where: {
+                    PC_Armado_ID: "e4d7793e-c045-4e3f-bf3c-32c882a849ce",
+                },
+                include: Productos
+            })
+            resp.send(listadoArmado)
+        }
+
+        if (tipoArmado == "gaming") {
+            const listadoArmado = await PC_Armado_Producto.findAll({
+                where: {
+                    PC_Armado_ID: "ce865977-0168-4f2c-9de1-868755f7339c",
+                },
+                include: Productos
+            })
+            resp.send(listadoArmado)
+        }
+
+        if (tipoArmado == "office") {
+            const listadoArmado = await PC_Armado_Producto.findAll({
+                where: {
+                    PC_Armado_ID: "e4d7793e-c045-4e3f-bf3c-32c882a849ce",
+                },
+                include: Productos
+            })
+            resp.send(listadoArmado)
+        }
+
+        if (tipoArmado == "other") {
+            const listadoArmado = await PC_Armado_Producto.findAll({
+                where: {
+                    PC_Armado_ID: "c0162419-933f-461d-993b-0226e98534ef",
+                },
+                include: Productos
+            })
+            resp.send(listadoArmado)
+        }
+
+        if (tipoArmado == "design") {
+            const listadoArmado = await PC_Armado_Producto.findAll({
+                where: {
+                    PC_Armado_ID: "359ed7ba-c205-4d0c-b146-00a06f3a5b22",
+                },
+                include: Productos
+            })
+            resp.send(listadoArmado)
+        }
+
+        if (tipoArmado == "rendering") {
+            const listadoArmado = await PC_Armado_Producto.findAll({
+                where: {
+                    PC_Armado_ID: "359ed7ba-c205-4d0c-b146-00a06f3a5b22",
+                },
+                include: Productos
+            })
+            resp.send(listadoArmado)
+        }
+
+
+    })
+
+//obtener la pc armada
+app.post("/obtener_pc_armado", async (req, resp) => {
+    const pc_armado_id = req.body.pc_armado_id
+
+    const pc_armado = await PC_Armado.findOne({
+        where: {
+            PC_Armado_ID: pc_armado_id
+        }
+    })
+
+    if (pc_armado == null) {
+        resp.send({ error: "No se pudo obtener la pc armada" })
+    }
+    else {
+        resp.send({ error: "", pc_armado })
+    }
+
+})
+
 //obtener productos asociados a una pc armada
 app.get("/productos_pc_armados", async (req, resp) => {
     const listaProductosPcArmados = await PC_Armado_Producto.findAll()
@@ -132,42 +218,42 @@ app.post("/get_user", async (req, resp) => {
     const password = req.body.password
 
     const user = await Usuarios.findOne({
-        where : {
-            Correo : email,
-            Contraseña : password
+        where: {
+            Correo: email,
+            Contraseña: password
         }
     })
 
-    if(user == null){
+    if (user == null) {
         resp.send({
-            error : "El usuario no existe"
+            error: "El usuario no existe"
         })
     }
-    else{
-        resp.send({error : "", TOKEN : TOKEN})
+    else {
+        resp.send({ error: "", TOKEN: TOKEN })
     }
 })
 
 //obtener producto buscado en searchBar
 
-app.post("/obtener_producto", async (req,resp)=>{
-        const idProductoBuscado = req.body.idProductoBuscado
+app.post("/obtener_producto", async (req, resp) => {
+    const idProductoBuscado = req.body.idProductoBuscado
 
-        const producto = await Productos.findOne({
-            where : {
-                Producto_ID : idProductoBuscado
-            }
+    const producto = await Productos.findOne({
+        where: {
+            Producto_ID: idProductoBuscado
+        }
+    })
+
+    if (producto == null) {
+        resp.send({ error: "el producto no existe" })
+    }
+    else {
+        resp.send({
+            error: "",
+            producto: producto
         })
-
-        if(producto == null){
-            resp.send({error : "el producto no existe"})
-        }
-        else{
-            resp.send({
-                error : "",
-                producto : producto
-            })
-        }
+    }
 })
 /*FIN DE ENDPOINTS PARA OBTENER DATOS TOTALES*/
 
@@ -210,14 +296,14 @@ app.post("/create_user", async (req, resp) => {
     }
 
     const listaUsuarios = await Usuarios.findAll({
-        where : {
-            Correo : email
+        where: {
+            Correo: email
         }
     })
 
     if (listaUsuarios.length > 0) {
         resp.send({
-           error: "EL CORREO YA EXISTE"
+            error: "EL CORREO YA EXISTE"
         })
         return
     }
