@@ -9,10 +9,11 @@ const sequelize = new Sequelize(CADENA_CONEXION, {
     dialectOptions :{
         ssl : {
             require: true,
-            rejecUnauthorized : false
+            rejectUnauthorized : false
         }
     }
 })
+
 
 //para las columnas createdAt y updatedAt
 const timestamps = {
