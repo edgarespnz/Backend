@@ -80,70 +80,70 @@ app.get("/pc_armados", async (req, resp) => {
 
 //obtener productos de la pc armada
 app.get("/obtener_productos_pc_armado", async (req, resp) => {
-        const tipoArmado = req.query.tipo
+    const tipoArmado = req.query.tipo
 
-        if (tipoArmado == "coding" || tipoArmado == undefined) {
-            const listadoArmado = await PC_Armado_Producto.findAll({
-                where: {
-                    PC_Armado_ID: "e4d7793e-c045-4e3f-bf3c-32c882a849ce",
-                },
-                include: Productos
-            })
-            resp.send(listadoArmado)
-        }
+    if (tipoArmado == "coding" || tipoArmado == undefined) {
+        const listadoArmado = await PC_Armado_Producto.findAll({
+            where: {
+                PC_Armado_ID: "e4d7793e-c045-4e3f-bf3c-32c882a849ce",
+            },
+            include: Productos
+        })
+        resp.send(listadoArmado)
+    }
 
-        if (tipoArmado == "gaming") {
-            const listadoArmado = await PC_Armado_Producto.findAll({
-                where: {
-                    PC_Armado_ID: "ce865977-0168-4f2c-9de1-868755f7339c",
-                },
-                include: Productos
-            })
-            resp.send(listadoArmado)
-        }
+    if (tipoArmado == "gaming") {
+        const listadoArmado = await PC_Armado_Producto.findAll({
+            where: {
+                PC_Armado_ID: "ce865977-0168-4f2c-9de1-868755f7339c",
+            },
+            include: Productos
+        })
+        resp.send(listadoArmado)
+    }
 
-        if (tipoArmado == "office") {
-            const listadoArmado = await PC_Armado_Producto.findAll({
-                where: {
-                    PC_Armado_ID: "e4d7793e-c045-4e3f-bf3c-32c882a849ce",
-                },
-                include: Productos
-            })
-            resp.send(listadoArmado)
-        }
+    if (tipoArmado == "office") {
+        const listadoArmado = await PC_Armado_Producto.findAll({
+            where: {
+                PC_Armado_ID: "e4d7793e-c045-4e3f-bf3c-32c882a849ce",
+            },
+            include: Productos
+        })
+        resp.send(listadoArmado)
+    }
 
-        if (tipoArmado == "other") {
-            const listadoArmado = await PC_Armado_Producto.findAll({
-                where: {
-                    PC_Armado_ID: "c0162419-933f-461d-993b-0226e98534ef",
-                },
-                include: Productos
-            })
-            resp.send(listadoArmado)
-        }
+    if (tipoArmado == "other") {
+        const listadoArmado = await PC_Armado_Producto.findAll({
+            where: {
+                PC_Armado_ID: "c0162419-933f-461d-993b-0226e98534ef",
+            },
+            include: Productos
+        })
+        resp.send(listadoArmado)
+    }
 
-        if (tipoArmado == "design") {
-            const listadoArmado = await PC_Armado_Producto.findAll({
-                where: {
-                    PC_Armado_ID: "359ed7ba-c205-4d0c-b146-00a06f3a5b22",
-                },
-                include: Productos
-            })
-            resp.send(listadoArmado)
-        }
+    if (tipoArmado == "design") {
+        const listadoArmado = await PC_Armado_Producto.findAll({
+            where: {
+                PC_Armado_ID: "359ed7ba-c205-4d0c-b146-00a06f3a5b22",
+            },
+            include: Productos
+        })
+        resp.send(listadoArmado)
+    }
 
-        if (tipoArmado == "rendering") {
-            const listadoArmado = await PC_Armado_Producto.findAll({
-                where: {
-                    PC_Armado_ID: "359ed7ba-c205-4d0c-b146-00a06f3a5b22",
-                },
-                include: Productos
-            })
-            resp.send(listadoArmado)
-        }
+    if (tipoArmado == "rendering") {
+        const listadoArmado = await PC_Armado_Producto.findAll({
+            where: {
+                PC_Armado_ID: "359ed7ba-c205-4d0c-b146-00a06f3a5b22",
+            },
+            include: Productos
+        })
+        resp.send(listadoArmado)
+    }
 
 
-    })
+})
 
 //obtener la pc armada
 app.post("/obtener_pc_armado", async (req, resp) => {
@@ -202,7 +202,9 @@ app.get("/reportes", async (req, resp) => {
 
 //obtener todas las reseñas
 app.get("/resenas", async (req, resp) => {
-    const listaResenas = await Resena.findAll()
+    const listaResenas = await Resena.findAll({
+        include : Usuarios
+    })
     resp.send(listaResenas)
 })
 
@@ -230,7 +232,7 @@ app.post("/get_user", async (req, resp) => {
         })
     }
     else {
-        resp.send({ error: "", TOKEN: TOKEN })
+        resp.send({ error: "", TOKEN: TOKEN, user })
     }
 })
 
@@ -256,6 +258,57 @@ app.post("/obtener_producto", async (req, resp) => {
     }
 })
 /*FIN DE ENDPOINTS PARA OBTENER DATOS TOTALES*/
+
+//obtener ordenes asociadas a usuario
+
+app.post("/obtener_ordenes_usuario", async (req, resp) => {
+    const userid = req.query.userid
+
+    if (userid == undefined || userid == null) {
+        const listadoOrden = await Orden_Producto.findAll({
+            include: Productos
+        })
+        resp.send(listadoOrden)
+    } else {
+        const listadoOrdenOg = await Orden.findAll({
+            where: {
+                Usuario_id: userid
+            },
+            include: {
+                model: Orden_Producto,
+                include: Productos
+            }
+        })
+
+        resp.send(listadoOrdenOg)
+    }
+})
+
+
+//publicar un reporte
+app.post("/reporte", async (req, resp) => {
+
+    const correo = req.body.correo
+    const descripcion = req.body.descripcion
+    const usuarioid = req.body.userid
+    const nombre = req.body.nombre
+    const telefono = req.body.telefono
+    const asunto = req.body.asunto
+    const reporteid = crypto.randomUUID()
+
+    if (correo !== undefined) {
+        await Reporte.create({
+            Usuario_ID: usuarioid,
+            Reporte_ID: reporteid,
+            Correo: correo,
+            Nombre: nombre,
+            Telefono: telefono,
+            Descripcion: descripcion,
+            Asunto: asunto
+        })
+    }
+    resp.end()
+})
 
 
 
