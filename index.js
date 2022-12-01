@@ -16,7 +16,7 @@ const { stringify } = require("querystring");
 
 
 const app = express();
-const PORT = 8888;
+const PORT = process.env.PORT ||8888
 const TOKEN = "123456789"
 
 app.use(bodyParser.json());

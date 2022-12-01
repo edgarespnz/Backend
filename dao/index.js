@@ -1,9 +1,16 @@
 const { Sequelize, DataTypes, UUIDV4 } = require("sequelize");
 
-const CADENA_CONEXION =
+const CADENA_CONEXION = process.env.DATABASE_URL ||
     "postgresql://postgres:postgres@localhost:5432/product_backlog"
 
-const sequelize = new Sequelize(CADENA_CONEXION)
+const sequelize = new Sequelize(CADENA_CONEXION, {
+    dialectOptions :{
+        ssl : {
+            require: true,
+            rejecUnauthorized : false
+        }
+    }
+})
 
 //para las columnas createdAt y updatedAt
 const timestamps = {
